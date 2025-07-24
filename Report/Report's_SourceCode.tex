@@ -1,0 +1,220 @@
+%% Basic Setup
+\documentclass[11pt,a4paper]{report}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{newtxtext,newtxmath}
+
+%% Layout and Spacing
+\usepackage[a4paper,left=25mm,right=25mm,top=25mm,bottom=25mm,headheight=12mm,footskip=12mm]{geometry}
+\usepackage{setspace}
+\setlength{\parindent}{0em}
+\setlength{\parskip}{1ex}
+
+%% Color
+\usepackage[table]{xcolor}
+\definecolor{nitpatna}{rgb}{0.1, 0.3, 0.6}
+\definecolor{cloudwhite}{cmyk}{0,0,0,0.025}
+
+%% Mathematics
+\usepackage{amsmath}
+
+%% Graphics and Tables
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{longtable}
+\graphicspath{{figures/}}
+
+%% Text and Utilities
+\usepackage[normalem]{ulem}
+\usepackage{csquotes}
+
+%% Headers and Footers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\chead{\small{\emph{\projtitle}}}
+\cfoot{\small{\thepage}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.0pt}
+
+%% Code Listings
+\usepackage{listings}
+\lstset{
+ language=JavaScript,
+ basicstyle=\footnotesize\ttfamily,
+ keywordstyle=\bfseries,
+ numbers=left,
+ numberstyle=\scriptsize\texttt,
+ stepnumber=1,
+ numbersep=8pt,
+ frame=tb,
+ float=htb,
+ aboveskip=8mm,
+ belowskip=4mm,
+ backgroundcolor=\color{cloudwhite},
+ showspaces=false,
+ showstringspaces=false,
+ showtabs=false,
+ tabsize=2,
+ captionpos=b,
+ belowcaptionskip=2pt,
+ abovecaptionskip=8pt,
+ breaklines=true,
+ breakatwhitespace=true,
+ escapeinside={\%}{)},
+ morekeywords={async,await,class,constructor,fetch,try,catch,if,else,for,return,let}
+}
+
+%% Hyperlinks
+\usepackage{hyperref}
+\hypersetup{
+    plainpages=false,
+    pdfpagelayout=SinglePage,
+    bookmarksopen=false,
+    bookmarksnumbered=true,
+    breaklinks=true,
+    linktocpage=true,
+    colorlinks=true,
+    linkcolor=nitpatna,
+    urlcolor=nitpatna,
+    filecolor=nitpatna,
+    citecolor=nitpatna
+}
+
+%% Document Specific Macros
+\newcommand{\projtitle}{A project report on password strength analyzer}
+\newcommand{\projsubtitle}{A Web-Based Security Tool}
+\newcommand{\projteam}{Raman Kumar, Rahul Kumar, Ayushmaan}
+
+%% Custom commands
+\newcommand{\class}[1]{{\normalfont\sffamily #1\/}}
+\newcommand{\code}[1]{{\normalfont\texttt{#1}}}
+
+\pagestyle{fancy}
+
+\begin{document}
+
+%% Preamble page numbers
+\pagenumbering{roman}\setcounter{page}{1}
+
+%% Cover page
+\begin{titlepage}
+\center
+\vspace*{-12mm}
+{\large \textbf{\textsc{\school}}}\\
+{\large \textbf{\textsc{\degree}}}\\[10mm]
+\begin{center}
+    \includegraphics[width=0.4\textwidth]{logo.png}
+\end{center}
+
+{\huge \textbf{\projtitle}}\\[6mm]
+{\Large \textbf{\projsubtitle}}\\
+
+{\Large \textbf{\projcourse}}\\[6mm]
+{\Large \textbf{Under the supervision of}}\\[4mm]
+{\large Dr. Kakali Chatterjee}\\[2mm]
+{\small Assistant Professor}\\[1mm]
+{\small Computer Science and Engineering}\\[10mm]
+{\Large \textbf{Submitted By}}\\[4mm]
+
+{\large Raman Kumar - 2206180}\\[2mm]
+{\large Rahul Kumar - 2206165}\\[2mm]
+{\large Ayushmaan - 2206269}\\[40mm]
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\lstset{
+  language=JavaScript,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{blue}\bfseries,
+  numbers=left,
+  numberstyle=\tiny,
+  stepnumber=1,
+  numbersep=5pt,
+  frame=single,
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=2,
+  showspaces=false,
+  showstringspaces=false,
+  morekeywords={let,if,else,return,class,async,await,fetch}
+}
+
+\pagenumbering{arabic}
+
+\section{Introduction}
+Weak passwords remain a critical security risk, often targeted by brute-force and dictionary attacks. The Password Strength Analyzer is a web-based tool designed to evaluate password security in real-time, helping users create stronger passwords. Built using HTML, JavaScript, Vite, and Tailwind CSS, it assesses passwords based on complexity criteria and checks against a list of 10,000 common passwords. The system assigns a 0--100 score, labeled as Weak (\texttt{<=50}), Moderate (\texttt{51--80}), or Strong (\texttt{>80}), and computes SHA-256 hashes to demonstrate secure password handling. This report details the project's objectives, technical design, implementation, results, and future potential.
+
+\section{Objective}
+The project aims to:
+\begin{itemize}
+    \item Provide instant feedback on password strength to guide users toward secure choices.
+    \item Enforce password complexity policies, including minimum length and character diversity.
+    \item Educate users on cryptographic hashing through client-side SHA-256 computation.
+    \item Deliver a responsive, user-friendly interface using modern web technologies.
+\end{itemize}
+By combining scoring, common password checks, and hashing, the analyzer seeks to enhance user awareness and promote best practices in password security.
+
+\section{Technical Overview}
+The analyzer operates entirely client-side, leveraging:
+\begin{itemize}
+    \item \textbf{HTML}: Structures the input form and result display.
+    \item \textbf{JavaScript}: Powers the \texttt{PasswordAnalyzer} class for logic.
+    \item \textbf{Vite}: Streamlines development and bundling.
+    \item \textbf{Tailwind CSS}: Styles the UI with responsive design.
+    \item \textbf{Web Crypto API}: Computes SHA-256 hashes.
+\end{itemize}
+Passwords are evaluated for complexity (length $\geq 8$, uppercase, lowercase, digits, special characters) using regular expressions. A \texttt{Set} of 10,000 common passwords (loaded from \texttt{common\_passwords.txt}) ensures vulnerable inputs are flagged. The scoring system awards 20 points per complexity criterion, deducts 50 points for common passwords, and adds 10 points for passwords longer than 12 characters, capped at 100. Results are labeled with (Weak, Moderate, and Strong) and colored (red, yellow, green) for clarity.
+\pagebreak
+
+\section{Implementation}
+The project is structured as a single-page web application. Key components include:
+\begin{itemize}
+    \item \textbf{Setup}: Initialized with npm, Vite, and Tailwind CSS. The \texttt{common\_passwords.txt} file resides in \texttt{public/}.
+    \item \textbf{Logic}: The \texttt{PasswordAnalyzer} class checks the password’s complexity. This means it looks at the password to see if it’s built in a way that makes it hard to guess. It checks five things:
+    \begin{itemize}
+        \item \textbf{Length}: Is the password at least 8 characters long? For example, “sunshine” has 8 characters, so it passes this check.
+        \item \textbf{Uppercase letters}: Does it have at least one capital letter, like A, B, or C? In “Sunshine”, the “S” is uppercase, so it counts.
+        \item \textbf{Lowercase letters}: Are there small letters, like a, b, or c? “sunshine” has lots of these.
+        \item \textbf{Numbers}: Does it include digits, like 1, 2, or 3? For example, “sunshine123” has numbers.
+        \item \textbf{Special characters}: Are there symbols like !, @, \#, or \$? “sunshine!” has an exclamation mark, which is a special character.
+    \end{itemize}
+    To do these checks, the class uses something called regular expressions, which are like patterns that search for specific types of characters. For instance, it uses \texttt{[A-Z]} to find any uppercase letter and \texttt{[0-9]} to find numbers. If a password passes a check, the class notes it down, like ticking a box on a checklist.
+    \item \textbf{UI}: A Tailwind-styled interface displays the score, label, emoji, SHA-256 hash (with \texttt{break-all}), and recommendations.
+\end{itemize}
+%Development commands:
+%\begin{lstlisting}[language=bash]
+%npm install
+%npm run dev
+%\end{lstlisting}
+The system uses \texttt{fetch} to load common passwords into a \texttt{Set}, ensuring efficient lookups. Error handling manages network failures gracefully.
+
+\section{Result}
+Testing validated the analyzer’s functionality:
+\begin{itemize}
+    \item \texttt{password}: Scored 0 (Weak, red) due to common password penalty.
+    \item \texttt{MyPass2023}: Scored 80 (Moderate, yellow), meeting four complexity criteria.
+    \item \texttt{MyVeryLongPass\$2023}: Scored 100 (Strong, green), exceeding all criteria with length bonus.
+\end{itemize}
+Performance is robust, with hashing under 10ms and real-time UI updates. The responsive design adapts to various screen sizes. Limitations include client-side hashing (not production-ready) and static scoring weights, which may oversimplify strength assessment.
+
+\section{Conclusion}
+The Password Strength Analyzer successfully delivers real-time password evaluation, enforces complexity policies, and educates users on hashing. Its intuitive interface, powered by Tailwind CSS and Vite, ensures accessibility and ease of use. By integrating common password checks and a clear scoring system, it promotes stronger password practices, addressing a key cybersecurity need.
+
+\section{Future Work}
+Potential enhancements include:
+\begin{itemize}
+    \item \textbf{Entropy Scoring}: Incorporate Shannon entropy for better randomness assessment.
+    \item \textbf{Server-Side Hashing}: Move hashing to a backend for production security.
+    \item \textbf{Larger Password Lists}: Expand to millions of known passwords for improved detection.
+    \item \textbf{UI Features}: Add a progress bar for visual score representation.
+\end{itemize}
+These additions would strengthen the analyzer’s accuracy and applicability.
+
+\appendix
+
+\end{document}
